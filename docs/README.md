@@ -1,3 +1,3 @@
-# Headline
+# Video notes
 
-> An awesome project.
+> Notes about video and audio shenanigans 
