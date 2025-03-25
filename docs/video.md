@@ -24,4 +24,35 @@
 
 MP4 format supports AVCC, avi format supports AnnexB
 
-## 
+## ACC vs G711 format
+
+G711 (u or a law) are stored as raw buffers which can be sent for decoding without preprocessing.
+
+AAC buffers requires the creation of ADTS frames to specify context and decoding informations. 
+
+
+    The ADTS header is a fixed-length header that precedes each AAC frame. It contains metadata about the AAC frame, such as the frame length, sampling rate, and channel configuration.
+    The ADTS header is 7 or 9 bytes long, depending on whether the CRC (Cyclic Redundancy Check) is used.
+
+ADTS Header Structure:
+
+    The ADTS header is composed of several fields, each with a specific bit length. Here’s the structure of the ADTS header:
+    Code
+
+| Bits | Field                      | Description |
+|------|----------------------------|-------------|
+| 12   | Syncword                   | 0xFFF, all bits must be 1 |
+| 1    | ID                         | MPEG Version: 0 for MPEG-4, 1 for MPEG-2 |
+| 2    | Layer                      | Always 00 |
+| 1    | Protection_absent          | 1 if no CRC, 0 if CRC present |
+| 2    | Profile                    | Profile of AAC: 00 Main, 01 LC (Low Complexity), 10 SSR (Scalable Sample Rate) |
+| 4    | Sampling_frequency_index   | Sampling rate index (4 bits) |
+| 1    | Private_bit                | Usually 0 |
+| 3    | Channel_configuration      | Channel configuration (3 bits) |
+| 1    | Original/copy              | 0 for original, 1 for copy |
+| 1    | Home                       | Always 0 |
+| 1    | Copyright_identification_bit| 0 or 1 |
+| 1    | Copyright_identification_start | 0 or 1 |
+| 13   | Frame_length               | Length of the frame including header |
+| 11   | Buffer_fullness            | 0x7FF if VBR, otherwise buffer fullness |
+| 2    | Number_of_raw_data_blocks_in_frame | Usually 0 |
